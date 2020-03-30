@@ -112,6 +112,11 @@ namespace SpacePark
             {
                 result = SpacePark.APICall.GetPersonInfoByID(randomNumber).Result;
                 //SpacePark.RandomSleepTimer += 5;
+                if (result == null)
+                {
+                    SpacePark.Print("World", "It seems as if SWAPI is unable to respond at the moment.");
+                    return null;
+                }
                 SpacePark.Print("Guard", $"Welcome {result.Name} to my Spaceport");
             }
             return result;

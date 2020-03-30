@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace SpacePark
 {
@@ -12,7 +13,9 @@ namespace SpacePark
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                optionsBuilder.UseSqlServer("");
+                IConfigurationBuilder builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true);
+                var config = builder.Build();
+                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             }
         }
     }

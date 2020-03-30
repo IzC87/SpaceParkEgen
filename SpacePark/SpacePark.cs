@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -20,16 +18,9 @@ namespace SpacePark
         public static double ParkingSpaceLength = 300;
         public static DateTime WaitTimer = DateTime.Now;
         public static TimeSpan TimeElapsed;
-        IConfigurationBuilder builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true);
-
 
         public void RunProgram()
         {
-            var config = builder.Build();
-            Console.WriteLine(config.GetConnectionString("DefaultConnection"));
-            Console.ReadKey();
-            return;
-
             while (true)
             {
                 if (RandomMethods.RandomWaitIsDone())
