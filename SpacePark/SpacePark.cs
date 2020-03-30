@@ -34,9 +34,10 @@ namespace SpacePark
                         RandomMethods.RandomVisitorLeaves();
                     }
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(25);
             }
         }
+
         public static void Print(string entity, string message, bool clearMessage = false)
         {
             Console.Clear();

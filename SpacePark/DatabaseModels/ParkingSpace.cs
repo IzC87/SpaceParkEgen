@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SpacePark
 {
@@ -9,6 +8,8 @@ namespace SpacePark
         public string SpaceShipName { get; set; }
         public DateTime ParkTime { get; set; }
         public bool ParkedByPerson { get; set; }
+
+
         public int PersonID { get; set; }
         public Person Person { get; set; }
     }
