@@ -25,7 +25,7 @@ namespace SpacePark
             {
                 if (RandomMethods.RandomWaitIsDone())
                 {
-                    if (RandomSeed.Next(1, 2) == 1)
+                    if (RandomSeed.Next(1, 3) == 1)
                     {
                         RandomMethods.GenerateRandomVisit();
                     }
@@ -37,10 +37,10 @@ namespace SpacePark
                 Thread.Sleep(10);
             }
         }
-        public static void Print(string person, string message, bool clearMessage = false)
+        public static void Print(string entity, string message, bool clearMessage = false)
         {
             Console.Clear();
-            string fullMessage = $"{person}: {message}";
+            string fullMessage = $"{entity}: {message}";
 
             PrintMessage.Add(fullMessage);
             foreach (var line in PrintMessage)
@@ -53,14 +53,17 @@ namespace SpacePark
                 Console.WriteLine();
             }
 
-
-            var context = new MyContext();
-            var nameList = context.Persons.OrderBy(i => i.PersonID).ToList();
-            var parkingList = context.ParkingSpaces.OrderBy(i => i.Person).ToList();
-
-            for (int x = 0; x < nameList.Count(); x++)
+            using (MyContext context = new MyContext())
             {
-                Console.WriteLine($"{nameList[x].Name} has parked {parkingList[x].SpaceShipName} since {parkingList[x].ParkTime}");
+                var people = context.Persons.ToList();
+                var parkingSpaces = context.ParkingSpaces.ToList();
+
+
+                foreach (var parking in parkingSpaces)
+                {
+                    var query = people.Single(x => x.PersonID == parking.Person.PersonID);
+                    Console.WriteLine($"{query.Name} has parked {parking.SpaceShipName} since {parking.ParkTime}");
+                }
             }
 
             if (clearMessage)
@@ -88,8 +91,29 @@ namespace SpacePark
             newParking.Person = context.Persons.First(p => p.PersonID == person.PersonID);
             context.ParkingSpaces.Add(newParking);
             context.SaveChanges();
+        }
 
-            //return 0;
+        public static void RemoveParkedGuest(int removeIndex)
+        {
+            using (var context = new MyContext())
+            {
+                var parkingSpace = context.ParkingSpaces.First(p => p.ParkingSpaceID == removeIndex);
+                TimeSpan timeSpan = DateTime.Now - parkingSpace.ParkTime;
+                var person = context.Persons.First(x => x.PersonID == parkingSpace.PersonID);
+
+                if (person != null)
+                {
+                    Print("World", $"{person.Name} left with {parkingSpace.SpaceShipName} and stayed for {timeSpan.TotalSeconds} seconds", true);
+
+                    context.Persons.Remove(person);
+                }
+                else
+                {
+                    Print("World", $"Someone left with {parkingSpace.SpaceShipName} and stayed for {timeSpan.TotalSeconds} seconds", true);
+                }
+                context.ParkingSpaces.Remove(parkingSpace);
+                context.SaveChanges();
+            }
         }
 
         public static bool IsThereFreeParkingSpace()

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SpacePark.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,7 @@ namespace SpacePark.Migrations
                     SpaceShipName = table.Column<string>(nullable: true),
                     ParkTime = table.Column<DateTime>(nullable: false),
                     ParkedByPerson = table.Column<bool>(nullable: false),
-                    PersonID = table.Column<int>(nullable: true)
+                    PersonID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +39,7 @@ namespace SpacePark.Migrations
                         column: x => x.PersonID,
                         principalTable: "Persons",
                         principalColumn: "PersonID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

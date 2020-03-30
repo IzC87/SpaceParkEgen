@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using static SpacePark.SpacePark;
 
 namespace SpacePark
 {
@@ -7,8 +9,16 @@ namespace SpacePark
     {
         public static void RandomVisitorLeaves()
         {
-            //double percentage = SpacePark.RandomSeed.Next(1, 100);
+            int removeIndex = SpacePark.RandomSeed.Next(1, SpacePark.MaxParkingSpaces);
 
+            using (var context = new MyContext())
+            {
+                var parkingList = context.ParkingSpaces.ToList();
+                if (removeIndex <= parkingList.Count)
+                {
+                    SpacePark.RemoveParkedGuest(removeIndex);
+                }
+            }
         }
 
         public static void GenerateRandomVisit()
